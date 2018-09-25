@@ -170,19 +170,30 @@ FAS_data = left_join(pup_data, litter_data, by = "litter_number")
 
 Importing & tidying class survey data
 
-```{r}
-os = read_csv("./surv_os") %>%
-  janitor::clean_names()
+```{r, warning = FALSE}
+os = read_csv("./surv_os.csv") %>%
+  janitor::clean_names() %>%
+  rename(uni = what_is_your_uni, 
+         oper_sys = what_operating_system_do_you_use
+         ) %>%
+  separate(uni, into = c("student", "uni"), sep = "_") %>% 
+  select(-student)
 
-git_ex = read.csv("./surv_program_git") %>%
-  janitor::clean_names()
+git_ex = read.csv("./surv_program_git.csv") %>%
+  janitor::clean_names() %>%
+  rename(uni = what_is_your_uni, 
+         degree = what_is_your_degree_program,
+         git_exp = which_most_accurately_describes_your_experience_with_git
+         ) %>% 
+  separate(uni, into = c("student", "uni"), sep = "_") %>%
+  select(-student)
 
 ```
 
 Joining two datasets
 
 ```{r}
-
+student_data = full_join(git_ex, os, by = "uni") %>% 
+  select(uni, degree, oper_sys, git_exp)
+#student_data
 ```
-
-Write a code chunk that imports and cleans both datasets, and then joins them.

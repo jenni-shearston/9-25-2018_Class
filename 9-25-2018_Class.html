@@ -268,6 +268,34 @@ litter_data = read_csv(&quot;./FAS_litters.csv&quot;, col_types = &quot;ccddiiii
 <pre class="r"><code>FAS_data = left_join(pup_data, litter_data, by = &quot;litter_number&quot;)
 #FAS_data</code></pre>
 </div>
+<div id="learning-assessment-2" class="section level2">
+<h2>Learning Assessment #2</h2>
+<p>Importing &amp; tidying class survey data</p>
+<pre class="r"><code>os = read_csv(&quot;./surv_os.csv&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  rename(uni = what_is_your_uni, 
+         oper_sys = what_operating_system_do_you_use
+         ) %&gt;%
+  separate(uni, into = c(&quot;student&quot;, &quot;uni&quot;), sep = &quot;_&quot;) %&gt;% 
+  select(-student)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   `What is your UNI?` = col_character(),
+##   `What operating system do you use?` = col_character()
+## )</code></pre>
+<pre class="r"><code>git_ex = read.csv(&quot;./surv_program_git.csv&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  rename(uni = what_is_your_uni, 
+         degree = what_is_your_degree_program,
+         git_exp = which_most_accurately_describes_your_experience_with_git
+         ) %&gt;% 
+  separate(uni, into = c(&quot;student&quot;, &quot;uni&quot;), sep = &quot;_&quot;) %&gt;%
+  select(-student)</code></pre>
+<p>Joining two datasets</p>
+<pre class="r"><code>student_data = full_join(git_ex, os, by = &quot;uni&quot;) %&gt;% 
+  select(uni, degree, oper_sys, git_exp)
+#student_data</code></pre>
+</div>
 
 
 
