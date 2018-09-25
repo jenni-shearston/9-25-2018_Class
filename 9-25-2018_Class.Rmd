@@ -18,7 +18,7 @@ PULSE data import
 ```{r}
 pulse_data = haven::read_sas("./public_pulse_data.sas7bdat") %>%
   janitor::clean_names()
-View(pulse_data)
+#View(pulse_data)
 
 ```
 
@@ -26,7 +26,7 @@ Tidy pulse_data
 
 ```{r, warning = FALSE}
 pulse_tidy_data = gather(pulse_data, key = visit, value = bdi, bdi_score_bl:bdi_score_12m)
-pulse_tidy_data
+#pulse_tidy_data
 
 ```
 
@@ -51,7 +51,7 @@ pulse_data = haven::read_sas("./public_pulse_data.sas7bdat") %>%
   mutate(visit = replace(visit, visit == "bl", "00m"),
          visit = factor(visit, levels = str_c(c("00", "01", "06", "12"), "m"))) %>%
   arrange(id, visit)
-pulse_data  
+#pulse_data  
 ```
 
 
@@ -106,7 +106,7 @@ Using the `spread` command
 
 ```{r}
 spread(analysis_result, key = time, value = mean)
-analysis_result
+#analysis_result
 
 ```
 
@@ -135,15 +135,54 @@ lotr_tidy = bind_rows(fellowship_ring, two_towers, return_king) %>%
   mutate(race = tolower(race)) %>% 
   select(movie, everything()) 
 
-lotr_tidy
+#lotr_tidy
 ```
 
 
 ## Joining Datasets
 
-Loading needed datasets
+Loading & tidying needed datasets
+
+```{r}
+pup_data = read_csv("./FAS_pups.csv", col_types = "ciiiii") %>%
+  janitor::clean_names() %>%
+  mutate(sex = recode(sex, `1` = "male", `2` = "female")) 
+
+litter_data = read_csv("./FAS_litters.csv", col_types = "ccddiiii") %>%
+  janitor::clean_names() %>%
+  select(-pups_survive) %>%
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    group = tolower(group))
+
+```
+
+Joining datasets
+
+```{r}
+FAS_data = left_join(pup_data, litter_data, by = "litter_number")
+#FAS_data
+
+```
+
+
+## Learning Assessment #2
+
+Importing & tidying class survey data
+
+```{r}
+os = read_csv("./surv_os") %>%
+  janitor::clean_names()
+
+git_ex = read.csv("./surv_program_git") %>%
+  janitor::clean_names()
+
+```
+
+Joining two datasets
 
 ```{r}
 
 ```
 
+Write a code chunk that imports and cleans both datasets, and then joins them.
