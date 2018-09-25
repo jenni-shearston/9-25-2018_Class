@@ -1,0 +1,42 @@
+---
+title: "9-25-2018 Class Work"
+author: "J Shearston"
+date: "September 25, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+```
+
+## Gather
+
+PULSE data import
+
+```{r}
+pulse_data = haven::read_sas("C:/Users/jenni/Dropbox/Columbia/Classes/Data Science I/9-18-20-2018_Class/data_wrangling_1_9-18-18/data_import_examples/data_import_examples/public_pulse_data.sas7bdat") %>%
+  janitor::clean_names()
+pulse_data
+pulse_tidy = pulse_data %>% 
+gather(key = "visit", value = "bdi_score", bdi_score_bl:bdi_score_12m)
+```
+
+Illustrate `separate`:
+
+```{r}
+pulse_tidy %>% 
+  separate(visit, into = c("bdi_str", "score_str", "visit"), sep = "_") %>% 
+  select(-bdi_str, -score_str) %>% 
+  mutate(visit = replace(visit, visit == "bl", "00m"))
+```
+
+All together, the data import / cleaning pipeline is:
+
+```{r}
+pulse_df = 
+  
+```
+
+
